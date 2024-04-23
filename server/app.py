@@ -93,9 +93,13 @@ def updateAlarm():
     enabled = 'enabled' in request.form
     db = getDb()
     cursor = db.cursor()
+    print(f"Updating alarm for {day}: {timeHour}:{timeMinute}, enabled: {enabled}")
     cursor.execute('REPLACE INTO alarms (day, timeHour, timeMinute, enabled) VALUES (?, ?, ?, ?);',
                    (day, timeHour, timeMinute, enabled))
     db.commit()
+    print("Database updated successfully.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
     return home()
 
 
