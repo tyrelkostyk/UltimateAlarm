@@ -8,9 +8,13 @@ alarmSettings = {
 	'enabled' : True
 }
 
+def currentSettings():
+    return f"\nAlarm Time: {alarm_settings['time']} - {'Enabled' if alarm_settings['enabled'] else 'Disabled'}"
+
+
 @app.route('/')
 def home():
-	return "Welcome to the Ultimate Alarm!"
+	return "Welcome to the Ultimate Alarm!" + currentSettings()
 
 @app.route('/alarm', methods=['GET', 'POST'])
 def manageAlarm():
