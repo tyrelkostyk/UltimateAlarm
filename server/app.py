@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from flask import Flask, request, render_template_string, g, abort
 
@@ -6,7 +7,8 @@ app = Flask(__name__)
 
 ## DATABASE
 
-DATABASE = 'alarm.db'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, 'alarm.db')
 
 def getDb():
 	db = getattr(g, '_database', None)
