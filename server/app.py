@@ -9,8 +9,7 @@ alarmSettings = {
 }
 
 def currentSettings():
-    return f"\nAlarm Time: {alarm_settings['time']} - {'Enabled' if alarm_settings['enabled'] else 'Disabled'}"
-
+    return f"\nAlarm Time: {alarmSettings['time']} - {'Enabled' if alarmSettings['enabled'] else 'Disabled'}"
 
 @app.route('/')
 def home():
