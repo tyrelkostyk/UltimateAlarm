@@ -32,10 +32,16 @@ def initDb():
             enabled BOOLEAN NOT NULL DEFAULT 0
         );
         ''')
-        # Pre-populate the table with default values for each day of the week
-        days = [(i, 0, 0, False) for i in range(7)]  # Create a list of tuples for each day with default time and disabled
-        cursor.executemany('REPLACE INTO alarms (day, timeHour, timeMinute, enabled) VALUES (?, ?, ?, ?);', days)
         db.commit()
+
+        # Pre-populate the table with default values for each day of the week (if empty)
+        cursor.execute('SELECT COUNT(*) FROM alarms')
+        if cursor.fetchone()[0] == 0:  # Fetchone returns a tuple and [0] is the count
+            # Table is empty, populate it with default values
+            days = [(i, 0, 0, False) for i in range(7)]  # Default values for each day
+            cursor.executemany('INSERT INTO alarms (day, timeHour, timeMinute, enabled) VALUES (?, ?, ?, ?);', days)
+            db.commit()
+
 
 ### HTML
 
