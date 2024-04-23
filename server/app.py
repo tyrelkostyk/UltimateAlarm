@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, render_template_string, g
+from flask import Flask, request, render_template_string, g, abort
 
 app = Flask(__name__)
 
@@ -93,20 +93,25 @@ def home():
 
 @app.route('/update', methods=['POST'])
 def updateAlarm():
-    day = request.form['day']
-    timeHour = request.form['timeHour']
-    timeMinute = request.form['timeMinute']
-    enabled = 'enabled' in request.form
-    db = getDb()
-    cursor = db.cursor()
-    print(f"Updating alarm for {day}: {timeHour}:{timeMinute}, enabled: {enabled}")
-    cursor.execute('REPLACE INTO alarms (day, timeHour, timeMinute, enabled) VALUES (?, ?, ?, ?);',
-                   (day, timeHour, timeMinute, enabled))
-    db.commit()
-    print("Database updated successfully.")
-    except Exception as e:
+	try:
+		day = request.form['day']
+		timeHour = request.form['timeHour']
+		timeMinute = request.form['timeMinute']
+		enabled = 'enabled' in request.form
+		db = getDb()
+		cursor = db.cursor()
+		print(f"Updating alarm for {day}: {timeHour}:{timeMinute}, enabled: {enabled}")
+		cursor.execute('REPLACE INTO alarms (day, timeHour, timeMinute, enabled) VALUES (?, ?, ?, ?);',
+						(day, timeHour, timeMinute, enabled))
+		db.commit()
+		print("Database updated successfully.")
+	except sqlite3.DatabaseError as e:
+    	print(f"Database error occurred: {e}")
+		abort(500)
+	except Exception as e:
         print(f"An error occurred: {e}")
-    return home()
+		abort(500)
+	return home()
 
 
 if __name__ == '__main__':
